@@ -69,36 +69,64 @@ const BentoProjectCard = ({ project, onClick }: { project: Project, onClick: () 
       whileHover={{ y: -10 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="relative group cursor-pointer overflow-hidden rounded-[3rem] border border-white/5 bg-slate-900/40 p-1 flex flex-col h-[400px]"
+      className="relative group cursor-pointer overflow-hidden rounded-[2.5rem] border border-white/5 bg-slate-950 flex flex-col h-[480px] shadow-2xl transition-all duration-500 hover:shadow-cyan-500/10 hover:border-cyan-500/20"
     >
-      <div className="relative z-10 p-10 flex flex-col h-full bg-slate-950/40 backdrop-blur-sm rounded-[3rem] border border-white/5">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src={project.image || "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800"} 
+          alt={project.name}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-40 grayscale group-hover:grayscale-0"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+      </div>
+
+      <div className="relative z-10 p-8 flex flex-col h-full">
         <div className="flex justify-between items-start mb-auto">
-          <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-white border border-white/10 group-hover:bg-cyan-500 group-hover:text-black transition-all duration-500">
-            {project.icon}
-          </div>
           <motion.div 
-            initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1 }}
-            className="flex items-center gap-2"
+            whileHover={{ rotate: 90 }}
+            className="w-12 h-12 bg-slate-900/80 backdrop-blur-md rounded-xl flex items-center justify-center text-cyan-400 border border-white/5 shadow-inner"
           >
-             <ArrowUpRight size={20} className="text-white" />
+            {project.icon}
           </motion.div>
+          <div className="flex items-center gap-2 bg-slate-900/50 backdrop-blur-md border border-white/5 px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
+             <span className="text-[9px] font-mono font-bold text-white uppercase tracking-widest">{project.date}</span>
+             <ArrowUpRight size={14} className="text-cyan-500" />
+          </div>
         </div>
 
-        <div className="mt-auto">
-          <span className="text-[10px] font-mono text-cyan-500 uppercase tracking-[0.3em] mb-4 block">{project.tech.join(' • ')}</span>
-          <h4 className="text-white text-4xl font-black font-display tracking-tight leading-none uppercase mb-4 group-hover:text-cyan-400 transition-colors">
-            {project.name}
-          </h4>
-          <p className="text-slate-400 text-sm leading-relaxed line-clamp-2 opacity-60 group-hover:opacity-100 transition-opacity">
-            {project.tagline}
+        <div className="mt-auto space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {project.tech.slice(0, 3).map((t, idx) => (
+              <span key={idx} className="text-[9px] font-mono text-cyan-500/80 bg-cyan-500/5 border border-cyan-500/20 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                {t}
+              </span>
+            ))}
+          </div>
+          
+          <div className="overflow-hidden">
+            <h4 className="text-white text-3xl md:text-3xl font-black font-display tracking-tight leading-none uppercase group-hover:text-cyan-400 transition-colors">
+              {project.name}
+            </h4>
+          </div>
+
+          <p className="text-slate-400 text-sm leading-relaxed line-clamp-2 md:line-clamp-3 opacity-60 group-hover:opacity-100 transition-all duration-500 transform group-hover:translate-y-0">
+            {project.tagline || project.desc}
           </p>
+
+          <div className="h-1 w-0 bg-cyan-500 group-hover:w-full transition-all duration-700" />
         </div>
       </div>
       
-      {/* Visual Decoration */}
-      <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none">
-        <Scan size={180} className="text-white -rotate-12" />
+      {/* Scanline Effect */}
+      <div className="absolute inset-x-0 top-0 h-[2px] bg-cyan-500/20 blur-sm transform -translate-y-full group-hover:animate-scan z-20 pointer-events-none" />
+      
+      {/* Corner Accents */}
+      <div className="absolute top-0 right-0 w-16 h-16 pointer-events-none opacity-0 group-hover:opacity-20 transition-opacity">
+        <div className="absolute top-6 right-6 w-4 h-4 border-t-2 border-r-2 border-white" />
+      </div>
+      <div className="absolute bottom-0 left-0 w-16 h-16 pointer-events-none opacity-0 group-hover:opacity-20 transition-opacity">
+        <div className="absolute bottom-6 left-6 w-4 h-4 border-b-2 border-l-2 border-white" />
       </div>
     </motion.div>
   );
@@ -171,10 +199,9 @@ const InteractiveAvatar = () => {
         <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
            <img 
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=b6e3f4,c0aede,d1d4f9&mouth=smile&eyes=default&topType=shortHair&facialHairType=beardLight" 
+              src="/src/assets/images/regenerated_image_1778546735708.jpg" 
               alt="3D Male Engineer Avatar"
-              className="w-full h-full object-contain"
-              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover rounded-2xl"
            />
         </div>
         
@@ -235,11 +262,13 @@ const SectionHeading = ({ children, sectionLabel = "Section" }: { children: Reac
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    className="mb-12"
+    className="mb-12 relative group"
   >
+    <div className="absolute -left-8 top-1/2 -translate-y-1/2 w-4 h-[1px] bg-cyan-500/30 scale-x-0 group-hover:scale-x-100 transition-transform origin-left hidden md:block" />
     <SectionIndicator label={sectionLabel} />
-    <h2 className="text-6xl md:text-7xl font-display font-black text-white uppercase tracking-tighter leading-none mb-4">
+    <h2 className="text-6xl md:text-7xl font-display font-black text-white uppercase tracking-tighter leading-none mb-4 flex items-center gap-4">
       {children}
+      <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-500/20 to-transparent" />
     </h2>
   </motion.div>
 );
@@ -253,6 +282,7 @@ interface Project {
   demo?: string;
   repo?: string;
   icon?: ReactNode;
+  image?: string;
 }
 
 export default function App() {
@@ -267,13 +297,18 @@ export default function App() {
       email: "aawadhhebahtalh@gmail.com",
       hero: {
         system: "[ Digital Identity Matrix: ONLINE ]",
-        desc: "Software engineer, CCNA architect, and Video Designer. Expert in full-stack ERP systems, monitoring solutions, and cinematic visual storytelling.",
-        title1: "Strategic",
-        title2: "Engineering",
+        desc: "Software engineer and Video Designer. Expert in full-stack ERP systems, monitoring solutions, and cinematic visual storytelling.",
+        title1: "Software",
+        title2: "Engineer",
         btnGithub: "Source Code",
         btnLinkedin: "Connect Node"
       },
       nav: {
+        home: "Home",
+        projects: "Projects",
+        skills: "Skills",
+        experience: "Experience",
+        education: "Education",
         archive: "Deployments",
       },
       projects: {
@@ -325,13 +360,18 @@ export default function App() {
       email: "aawadhhebahtalh@gmail.com",
       hero: {
         system: "[ مصفوفة الهوية الرقمية: متصل ]",
-        desc: "مهندس برمجيات، معماري أنظمة معتمد (CCNA)، ومصمم فيديو. خبير في بناء أنظمة ERP المتكاملة، حلول المراقبة، وسرد القصص المرئية السينمائية.",
-        title1: "هندسة",
-        title2: "استراتيجية",
+        desc: "مهندس برمجيات ومصمم فيديو. خبير في بناء أنظمة ERP المتكاملة، حلول المراقبة، وسرد القصص المرئية السينمائية.",
+        title1: "مهندس",
+        title2: "برمجيات",
         btnGithub: "كود المصدر",
         btnLinkedin: "رابط الاتصال"
       },
       nav: {
+        home: "الرئيسية",
+        projects: "المشاريع",
+        skills: "المهارات",
+        experience: "الخبرة",
+        education: "التعليم",
         archive: "الانتشارات",
       },
       projects: {
@@ -400,7 +440,8 @@ export default function App() {
       tech: ['PHP', 'Laravel', 'MySQL', 'Bootstrap'],
       date: '2025',
       demo: 'https://hummy-cake-stores.lovestoblog.com',
-      icon: <ShoppingBag size={16} />
+      icon: <ShoppingBag size={16} />,
+      image: "https://images.unsplash.com/photo-1555503771-5056a70e7f42?auto=format&fit=crop&q=80&w=800"
     },
     { 
       name: lang === 'en' ? 'Taiz Tourism' : 'تعز السياحية', 
@@ -408,7 +449,8 @@ export default function App() {
       desc: lang === 'en' ? 'Managed project phases from design to live execution. Features hotel booking synchronization and advanced database architecture.' : 'إدارة مراحل المشروع من التصميم إلى التنفيذ المباشر. يتميز بمزامنة حجز الفنادق ومعمارية قواعد بيانات متقدمة.',
       tech: ['PHP', 'Android', 'MySQL', 'API Integration'],
       date: '2024',
-      icon: <MapPin size={16} />
+      icon: <MapPin size={16} />,
+      image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=800"
     },
     { 
       name: lang === 'en' ? 'Smart Eng SaaS' : 'سمارت إنج SaaS', 
@@ -416,7 +458,8 @@ export default function App() {
       desc: lang === 'en' ? 'Specialized SaaS solution for engineering firms to manage blueprints, resource allocation, and project timelines with real-time collaboration.' : 'حل برمجيات كخدمة متخصص لشركات الهندسة لإدارة المخططات، وتخصيص الموارد، والجداول الزمنية للمشاريع مع تعاون فوري.',
       tech: ['React', 'Node.js', 'Express', 'MongoDB'],
       date: '2024',
-      icon: <Zap size={16} />
+      icon: <Zap size={16} />,
+      image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=800"
     },
     { 
       name: lang === 'en' ? 'Aman Healthcare' : 'منصة أمان الصحية', 
@@ -425,7 +468,8 @@ export default function App() {
       tech: ['Python', 'Django', 'React', 'PostgreSQL'],
       date: '2025',
       demo: 'https://aman-home-healthcare-platform.lovestoblog.com',
-      icon: <ShieldCheck size={16} />
+      icon: <ShieldCheck size={16} />,
+      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800"
     },
     { 
       name: lang === 'en' ? 'Tulsi Wellness' : 'منصة تولسي', 
@@ -433,7 +477,8 @@ export default function App() {
       desc: lang === 'en' ? 'Full-stack development of a mental health support application focusing on stress and anxiety management.' : 'تطوير متكامل لتطبيق دعم الصحة النفسية يركز على إدارة التوتر والقلق.',
       tech: ['Node.js', 'React', 'MongoDB'],
       date: '2024',
-      icon: <Zap size={16} />
+      icon: <Zap size={16} />,
+      image: "https://images.unsplash.com/photo-1527137342181-19aab11a8ee1?auto=format&fit=crop&q=80&w=800"
     },
     { 
       name: lang === 'en' ? 'Doctorak App' : 'تطبيق دكتورك', 
@@ -441,7 +486,8 @@ export default function App() {
       desc: lang === 'en' ? 'Medical appointment booking hub streamlining patient-doctor interactions through automated scheduling.' : 'مركز حجز المواعيد الطبية الذي يبسط التفاعل بين المريض والطبيب من خلال الجدولة الآلية.',
       tech: ['Dart', 'Flutter', 'Firebase'],
       date: '2024',
-      icon: <Terminal size={16} />
+      icon: <Terminal size={16} />,
+      image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&q=80&w=800"
     },
     { 
       name: lang === 'en' ? 'Multi-Vendor Marketplace' : 'سوق متعدد البائعين', 
@@ -449,25 +495,12 @@ export default function App() {
       desc: lang === 'en' ? 'A scalable multi-vendor marketplace platform allowing diverse sellers to manage storefronts with advanced commission and payout logic.' : 'منصة سوق متعدد البائعين قابلة للتوسع تتيح لمختلف البائعين إدارة متاجرهم مع منطق متقدم للعمولات والمدفوعات.',
       tech: ['PHP', 'Laravel', 'Vue.js', 'MySQL'],
       date: '2024',
-      icon: <Store size={16} />
-    },
-    { 
-      name: lang === 'en' ? 'Surveillance Matrix' : 'مصفوفة المراقبة', 
-      tagline: lang === 'en' ? 'Security & Network Logic' : 'منطق الأمن والشبكات',
-      desc: lang === 'en' ? 'Implementation of high-end surveillance solutions with CCNA-grade network auditing and signal stability optimization.' : 'تنفيذ حلول مراقبة متطورة مع تدقيق الشبكة بمعايير CCNA وتحسين استقرار الإشارة.',
-      tech: ['Networking', 'CCNA', 'Security'],
-      date: '2025',
-      icon: <Scan size={16} />
+      icon: <Store size={16} />,
+      image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&q=80&w=800"
     },
   ];
 
   const experiences = [
-    {
-      role: lang === 'en' ? 'Monitoring Systems Specialist' : 'أخصائي أنظمة مراقبة',
-      period: 'Aug 2025 - Present',
-      desc: lang === 'en' ? 'Expert in integrated surveillance (DVR/NVR), network signal optimization, and stability engineering for large-scale security nodes.' : 'خبير في أنظمة المراقبة المتكاملة (DVR/NVR)، تحسين إشارة الشبكة، وهندسة الاستقرار لعقد الأمان واسعة النطاق.',
-      icon: <Scan className="text-cyan-500" />
-    },
     {
       role: lang === 'en' ? 'Graduation Projects Assistant' : 'مساعد مشاريع تخرج',
       period: '2024',
@@ -549,42 +582,63 @@ export default function App() {
       <main className="max-w-6xl mx-auto w-full relative z-10 flex flex-col gap-24">
         
         {/* Navigation */}
-        <header className="flex justify-between items-center py-8">
+        <header className="flex justify-between items-center py-8 relative z-[100]">
            <motion.div 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-4 cursor-pointer"
+              className="flex items-center gap-4 cursor-pointer group"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
            >
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-black font-black text-xl">A</div>
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-black font-black text-xl group-hover:bg-cyan-500 transition-colors">A</div>
               <div className="flex flex-col">
                 <span className="text-white font-bold tracking-tight text-lg leading-none uppercase">{current.name}</span>
                 <span className="text-slate-500 font-mono text-[9px] uppercase tracking-[0.2em] mt-1">{current.role}</span>
               </div>
            </motion.div>
+
+           <nav className="hidden lg:flex items-center gap-8 bg-slate-900/50 backdrop-blur-md px-8 py-3 rounded-full border border-white/5 mx-4">
+              {[
+                { id: 'projects', label: current.nav.projects },
+                { id: 'skills', label: current.nav.skills },
+                { id: 'experience', label: current.nav.experience },
+                { id: 'education', label: current.nav.education }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-[10px] font-mono uppercase tracking-[0.2em] text-slate-400 hover:text-cyan-400 transition-colors"
+                >
+                  {item.label}
+                </button>
+              ))}
+           </nav>
            
-           <MinimalButton 
-              onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
-              className="px-6 py-2 rounded-full"
-           >
-              <Globe size={14} className={lang === 'ar' ? 'ml-2' : 'mr-2'} />
-              {lang === 'en' ? 'AR' : 'EN'}
-           </MinimalButton>
+           <div className="flex items-center gap-4">
+              <MinimalButton 
+                 onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}
+                 className="px-6 py-2 rounded-full h-10"
+              >
+                 <Globe size={14} className={lang === 'ar' ? 'ml-2' : 'mr-2'} />
+                 {lang === 'en' ? 'AR' : 'EN'}
+              </MinimalButton>
+           </div>
         </header>
 
         {/* Hero Section */}
-        <section className="flex flex-col items-center text-center mt-12 mb-24">
+        <section id="home" className="flex flex-col items-center text-center mt-12 mb-24 min-h-[70vh] justify-center">
            <InteractiveAvatar />
            <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
+              className="w-full"
            >
               <SectionIndicator label={current.hero.system} />
-              <h1 className="text-7xl md:text-[9rem] font-black font-display text-white uppercase tracking-[-0.08em] leading-[0.8] mb-12">
-                 {current.hero.title1} <br /> <span className="text-slate-700">{current.hero.title2}</span>
+              <h1 className="text-6xl md:text-[10rem] font-black font-display text-white uppercase tracking-[-0.05em] leading-[0.85] mb-12 flex flex-col items-center">
+                 <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70">{current.hero.title1}</span>
+                 <span className="text-slate-800 drop-shadow-[0_0_2px_rgba(34,211,238,0.2)]" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>{current.hero.title2}</span>
               </h1>
-              <p className="text-xl md:text-3xl text-slate-400 font-light max-w-4xl mx-auto leading-relaxed mb-16 tracking-tight">
+              <p className="text-xl md:text-2xl text-slate-400 font-light max-w-3xl mx-auto leading-relaxed mb-16 tracking-tight px-4">
                  {current.hero.desc}
               </p>
               <div className="flex flex-wrap justify-center gap-6 mb-12">
@@ -610,7 +664,7 @@ export default function App() {
         </section>
 
         {/* Project Grid */}
-        <section>
+        <section id="projects">
            <SectionHeading sectionLabel={current.projects.label}>{current.projects.title}</SectionHeading>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {projects.map((p) => (
@@ -622,7 +676,7 @@ export default function App() {
         </section>
 
         {/* Skills & Capabilities */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-24 py-24 border-t border-white/5">
+        <section id="skills" className="grid grid-cols-1 lg:grid-cols-2 gap-24 py-24 border-t border-white/5">
            <div>
               <SectionHeading sectionLabel={current.skills.label}>{current.skills.title}</SectionHeading>
               <div className="grid grid-cols-2 gap-12 mt-12">
@@ -668,7 +722,7 @@ export default function App() {
 
         {/* Experience, Education & Certs */}
         <section className="py-24 border-t border-white/5 grid grid-cols-1 lg:grid-cols-3 gap-24">
-           <div className="lg:col-span-2 space-y-24">
+           <div id="experience" className="lg:col-span-2 space-y-24">
               <div>
                  <SectionHeading sectionLabel={current.logs.label}>{current.logs.title}</SectionHeading>
                  <div className="space-y-12">
@@ -685,17 +739,40 @@ export default function App() {
                  </div>
               </div>
 
-              <div>
+              <div id="education" className="relative">
+                 {/* Schematic Background Decor */}
+                 <div className="absolute -right-24 top-0 w-64 h-64 opacity-[0.03] pointer-events-none select-none hidden lg:block">
+                    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full rotate-12">
+                       <path d="M10 10H190V190H10V10Z" stroke="white" strokeWidth="0.5"/>
+                       <path d="M10 50H190" stroke="white" strokeWidth="0.5"/>
+                       <path d="M10 90H190" stroke="white" strokeWidth="0.5"/>
+                       <path d="M10 130H190" stroke="white" strokeWidth="0.5"/>
+                       <path d="M10 170H190" stroke="white" strokeWidth="0.5"/>
+                       <path d="M50 10V190" stroke="white" strokeWidth="0.5"/>
+                       <path d="M90 10V190" stroke="white" strokeWidth="0.5"/>
+                       <path d="M130 10V190" stroke="white" strokeWidth="0.5"/>
+                       <path d="M170 10V190" stroke="white" strokeWidth="0.5"/>
+                       <circle cx="90" cy="90" r="40" stroke="cyan" strokeWidth="0.5" strokeDasharray="4 4"/>
+                    </svg>
+                 </div>
+
                  <SectionHeading sectionLabel={current.edu.label}>{current.edu.title}</SectionHeading>
                  <div className="space-y-12">
                     {education.map((edu: any, i) => (
-                       <div key={i} className="flex gap-8 group">
-                          <div className="mt-2 text-slate-700 group-hover:text-cyan-500 transition-colors">{edu.icon}</div>
-                          <div>
-                             <h4 className="text-2xl font-black text-white uppercase tracking-tight mb-2 underline-offset-8 group-hover:underline">{edu.degree}</h4>
-                             <span className="text-cyan-500 font-mono text-[10px] uppercase tracking-widest block mb-1">{edu.period}</span>
-                             <span className="text-white font-bold block mb-4">{edu.institution}</span>
-                             {edu.desc && <p className="text-slate-400 leading-relaxed max-w-xl">{edu.desc}</p>}
+                       <div key={i} className="flex gap-8 group relative">
+                          <div className="absolute -left-12 top-0 bottom-0 w-[1px] bg-slate-800 group-hover:bg-cyan-500/30 transition-colors hidden md:block" />
+                          <div className="mt-2 text-slate-700 group-hover:text-cyan-500 transition-colors relative z-10 transition-transform group-hover:scale-110">
+                            {edu.icon}
+                            <div className="absolute inset-0 bg-cyan-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                          <div className="relative z-10">
+                             <h4 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight mb-2 underline-offset-8 group-hover:underline transition-all">{edu.degree}</h4>
+                             <div className="flex items-center gap-3 mb-1">
+                                <span className="text-cyan-500 font-mono text-[10px] uppercase tracking-widest">{edu.period}</span>
+                                <div className="w-1 h-1 rounded-full bg-slate-700" />
+                                <span className="text-white font-bold text-sm">{edu.institution}</span>
+                             </div>
+                             {edu.desc && <p className="text-slate-400 leading-relaxed max-w-2xl text-sm md:text-base opacity-70 group-hover:opacity-100 transition-opacity mt-4">{edu.desc}</p>}
                           </div>
                        </div>
                     ))}
